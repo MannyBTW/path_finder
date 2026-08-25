@@ -7,6 +7,9 @@ class Grid():
         self.columns = columns
 
         self.grid = []
+        
+        self.start_count = 0
+        self.finish_count = 0
     
     def make_grid(self):
         
@@ -21,10 +24,40 @@ class Grid():
     def select_cell(self, row, col):
         if self.grid[row][col] == 0:
             self.grid[row][col] = 1
-            print(f"Row: {row}, Col: {col} SELECTED")
     
     def deselect_cell(self, row, col):
         if self.grid[row][col] == 1:
             self.grid[row][col] = 0
+    
+    def clear_grid(self):
+        for i, row in enumerate(self.grid):
+            for j, col in enumerate(row):
+                self.grid[i][j] = 0
+        self.start_count = 0
+        self.finish_count = 0
+
+        print("Grid cleared")
+    
+    def place_start(self, row, col):
+
+        if self.grid[row][col] == 6:
+            self.grid[row][col] = 0
+            self.start_count = 0
+        elif self.start_count != 1 and self.grid[row][col] == 0:
+            self.grid[row][col] = 6
+            self.start_count = 1
+
+        
+    
+    def place_finish(self, row, col):
+        
+        if self.grid[row][col] == 9:
+            self.grid[row][col] = 0
+            self.finish_count = 0
+        elif self.finish_count != 1 and self.grid[row][col] == 0:
+            self.grid[row][col] = 9
+            self.finish_count = 1
+        
+        
         
 
