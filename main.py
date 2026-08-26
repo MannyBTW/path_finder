@@ -25,12 +25,15 @@ def draw_grid(grid):
             #Wall
             elif grid.grid[i][j] == 1:
                 pygame.draw.rect(screen, (0, 0, 0), (j * square_width, i * square_height, square_width, square_height))
+            #Seen square
+            elif grid.grid[i][j] == 2:
+                pygame.draw.rect(screen, (0, 0, 255), (j * square_width, i * square_height, square_width, square_height))
             #Start square
             elif grid.grid[i][j] == 6:
-                            pygame.draw.rect(screen, (0, 255, 0), (j * square_width, i * square_height, square_width, square_height))
+                pygame.draw.rect(screen, (0, 255, 0), (j * square_width, i * square_height, square_width, square_height))
             #End Square
             elif grid.grid[i][j] == 9:
-                            pygame.draw.rect(screen, (255, 0, 0), (j * square_width, i * square_height, square_width, square_height))
+                pygame.draw.rect(screen, (255, 0, 0), (j * square_width, i * square_height, square_width, square_height))
             
 
 
@@ -47,6 +50,7 @@ while running:
             if event.button == 1:
                 #Setting drag mode to either select or deselect depending on starting square
                 mode = grid.grid[row][col]
+                print(f"Row: {row}, Col: {col}")
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_c:
                 grid.clear_grid()
@@ -54,6 +58,8 @@ while running:
                 grid.place_start(row, col)
             elif event.key == pygame.K_f:
                 grid.place_finish(row, col)
+            elif event.key == pygame.K_b:
+                grid.bfs()
                 
     #Dragging to select or deselect squares
     mouse_buttons = pygame.mouse.get_pressed()            
