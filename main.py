@@ -34,7 +34,9 @@ def draw_grid(grid):
             #End Square
             elif grid.grid[i][j] == 9:
                 pygame.draw.rect(screen, (255, 0, 0), (j * square_width, i * square_height, square_width, square_height))
-            
+            #Shortest path
+            elif grid.grid[i][j] == 3:
+                pygame.draw.rect(screen, (255, 0, 255), (j * square_width, i * square_height, square_width, square_height))
 
 
 while running:

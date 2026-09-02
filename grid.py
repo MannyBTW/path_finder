@@ -116,6 +116,22 @@ class Grid:
             #Check if square is finished square
             if self.grid[current_square[0]][current_square[1]] == 9:
                 #print(f"{current_square} IS THE FINISH SQUARE")
+                #Create array of shortest path
+                shortest_path = []
+                s = current_square
+                parents[self.start_square] = ()
+                
+                #Retrace steps from finish and add to shortest path
+                while not parents[s] == ():
+                    shortest_path.append(s)
+                    #If its not the finish square, turn into shortest path square
+                    if self.grid[s[0]][s[1]] != 9: 
+                        self.grid[s[0]][s[1]] = 3
+                    s = parents[s]
+                shortest_path.append(self.start_square) #Add starting square when finished
+                shortest_path = shortest_path[::-1] #Reverse path
+                print(shortest_path)
+                
                 break
             else:
                 #print(f"{current_square} is not the finish square")
@@ -133,17 +149,7 @@ class Grid:
                     if self.grid[current_square[0]][current_square[1]] != 6:
                         self.grid[current_square[0]][current_square[1]] = 2
         
-        #Create array of shortest path
-        shortest_path = []
-        s = current_square
-        parents[self.start_square] = 0
         
-        #Retrace steps from finish and add to shortest path
-        while not parents[s] == 0:
-            shortest_path.append(s)
-            s = parents[s]
-        shortest_path.append(self.start_square)
-        print(shortest_path)
           
                 
             
