@@ -10,6 +10,16 @@ class Grid:
         self.grid = []
 
         self.start_square = ()
+        
+        #Create a queue, current square, and seen squares
+        self.queue = deque([])
+        self.current_square = ()
+        self.seen_squares = []
+        
+        #Store parent of every discovered square
+        self.parents = {}
+        
+        self.bfs_running = False
     
     def make_grid(self):
         
@@ -33,6 +43,13 @@ class Grid:
         for i, row in enumerate(self.grid):
             for j, col in enumerate(row):
                 self.grid[i][j] = 0
+        
+        #Reset everything
+        self.queue = deque([])
+        self.current_square = ()
+        self.seen_squares = []
+        self.parents = {}
+                
 
 
         print("Grid cleared")
@@ -94,24 +111,19 @@ class Grid:
                 neighbours.append((row, col + 1))      
         return neighbours
     
-    def bfs(self):
-        
-        #Create a queue, current square, and seen squares
-        queue = deque([])
-        current_square = ()
-        seen_squares = []
-        
-        #Store parent of every discovered square
-        parents = {}
+    def init_bfs(self):
+        #Change bfs state
+        self.bfs_running = True
         
         #Add start square to queue and seen squares
-        queue.append(self.start_square)
-        seen_squares.append(self.start_square)
+        self.queue.append(self.start_square)
+        self.seen_squares.append(self.start_square)
         
+    def step_bfs(self):
         #Continue loop while the queue is not empty yet
-        while queue:
+        if self.queue:
             #New current square is the first square in queue
-            current_square = queue.popleft()
+            current_square = self.queue.popleft()
             
             #Check if square is finished square
             if self.grid[current_square[0]][current_square[1]] == 9:
@@ -119,20 +131,21 @@ class Grid:
                 #Create array of shortest path
                 shortest_path = []
                 s = current_square
-                parents[self.start_square] = ()
+                self.parents[self.start_square] = None
                 
                 #Retrace steps from finish and add to shortest path
-                while not parents[s] == ():
+                while not self.parents[s] == None:
                     shortest_path.append(s)
                     #If its not the finish square, turn into shortest path square
                     if self.grid[s[0]][s[1]] != 9: 
                         self.grid[s[0]][s[1]] = 3
-                    s = parents[s]
+                    s = self.parents[s]
                 shortest_path.append(self.start_square) #Add starting square when finished
                 shortest_path = shortest_path[::-1] #Reverse path
                 print(shortest_path)
                 
-                break
+                self.bfs_running = False
+                
             else:
                 #print(f"{current_square} is not the finish square")
                 pass
@@ -140,13 +153,13 @@ class Grid:
             #If not finished square, add valid/unseen neighbours to queue 
             for square in self.get_neighbour_cells(current_square[0], current_square[1]):
                 
-                if square not in seen_squares:
+                if square not in set(self.seen_squares):
                     parent_square = current_square
-                    parents[square] = parent_square
-                    queue.append(square)
-                    seen_squares.append(square)
+                    self.parents[square] = parent_square
+                    self.queue.append(square)
+                    self.seen_squares.append(square)
                     #Turn into seen square (test)
-                    if self.grid[current_square[0]][current_square[1]] != 6:
+                    if self.grid[current_square[0]][current_square[1]] not in [6 ,9]:
                         self.grid[current_square[0]][current_square[1]] = 2
         
         

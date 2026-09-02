@@ -7,6 +7,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.init()
 running = True
+clock = pygame.time.Clock()
+timer = 1
 
 grid = Grid(20, 20)
 grid.make_grid()
@@ -38,7 +40,9 @@ def draw_grid(grid):
             elif grid.grid[i][j] == 3:
                 pygame.draw.rect(screen, (255, 0, 255), (j * square_width, i * square_height, square_width, square_height))
 
-
+    if grid.bfs_running == True:
+        grid.step_bfs()
+        
 while running:
     
     for event in pygame.event.get():
@@ -61,7 +65,7 @@ while running:
             elif event.key == pygame.K_f:
                 grid.place_finish(row, col)
             elif event.key == pygame.K_b:
-                grid.bfs()
+                grid.init_bfs()
                 
     #Dragging to select or deselect squares
     mouse_buttons = pygame.mouse.get_pressed()            
