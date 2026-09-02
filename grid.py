@@ -77,19 +77,19 @@ class Grid:
         neighbours = []
         
         #Up
-        if 0 < (row - 1) < self.rows:
+        if 0 <= (row - 1) < self.rows:
             if self.grid[row - 1][col] != 1:
                 neighbours.append((row - 1, col))
         #Down
-        if 0 < (row + 1) < self.rows:
+        if 0 <= (row + 1) < self.rows:
             if self.grid[row + 1][col] != 1:
                 neighbours.append((row + 1, col))
         #Left
-        if 0 < (col - 1) < self.rows:
+        if 0 <= (col - 1) < self.columns:
             if self.grid[row][col - 1] != 1:
                 neighbours.append((row, col - 1))
         #Right
-        if 0 < (col + 1) < self.rows:
+        if 0 <= (col + 1) < self.columns:
             if self.grid[row][col + 1] != 1:
                 neighbours.append((row, col + 1))      
         return neighbours
@@ -101,6 +101,9 @@ class Grid:
         current_square = ()
         seen_squares = []
         
+        #Store parent of every discovered square
+        parents = {}
+        
         #Add start square to queue and seen squares
         queue.append(self.start_square)
         seen_squares.append(self.start_square)
@@ -109,23 +112,38 @@ class Grid:
         while queue:
             #New current square is the first square in queue
             current_square = queue.popleft()
-            print(current_square, self.grid[current_square[0]][current_square[1]])
             
             #Check if square is finished square
             if self.grid[current_square[0]][current_square[1]] == 9:
-                print(f"{current_square} IS THE FINISH SQUARE")
+                #print(f"{current_square} IS THE FINISH SQUARE")
                 break
             else:
-                print(f"{current_square} is not the finish square")
+                #print(f"{current_square} is not the finish square")
+                pass
             
             #If not finished square, add valid/unseen neighbours to queue 
             for square in self.get_neighbour_cells(current_square[0], current_square[1]):
+                
                 if square not in seen_squares:
+                    parent_square = current_square
+                    parents[square] = parent_square
                     queue.append(square)
                     seen_squares.append(square)
                     #Turn into seen square (test)
                     if self.grid[current_square[0]][current_square[1]] != 6:
                         self.grid[current_square[0]][current_square[1]] = 2
+        
+        #Create array of shortest path
+        shortest_path = []
+        s = current_square
+        parents[self.start_square] = 0
+        
+        #Retrace steps from finish and add to shortest path
+        while not parents[s] == 0:
+            shortest_path.append(s)
+            s = parents[s]
+        shortest_path.append(self.start_square)
+        print(shortest_path)
           
                 
             
