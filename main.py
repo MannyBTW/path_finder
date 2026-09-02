@@ -7,8 +7,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.init()
 running = True
-clock = pygame.time.Clock()
-timer = 1
+clock = pygame.time.Clock() 
+timer = 0
+bfs_delay = 0.1
 
 grid = Grid(20, 20)
 grid.make_grid()
@@ -18,6 +19,7 @@ square_height = screen_height // len(grid.grid)
 mode = 0
 
 def draw_grid(grid):
+    global timer
     
     for i, row in enumerate(grid.grid):
         for j, col in enumerate(row):
@@ -40,8 +42,13 @@ def draw_grid(grid):
             elif grid.grid[i][j] == 3:
                 pygame.draw.rect(screen, (255, 0, 255), (j * square_width, i * square_height, square_width, square_height))
 
-    if grid.bfs_running == True:
+    dt = clock.tick(60) / 1000
+    timer += dt
+    
+    if grid.bfs_running and timer >= bfs_delay:
         grid.step_bfs()
+        timer = 0
+
         
 while running:
     
